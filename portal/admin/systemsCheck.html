@@ -1,0 +1,323 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" ng-app>
+<head>
+    <meta charset="utf-8" />
+    <title>Lumi World Admin | Systems Check</title>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/font-style.css" />
+    <script src="js/angular.js"></script>
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/systemsCheck.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/main.js"></script> 
+</head>
+<body ng-controller="systemCheckController">
+
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand">Lumi World MIS</a>
+            </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="Dashboard.html"><i class="fa fa-tachometer"></i> Dashboard</a></li>
+                    <li><a href="newsFeeds.html"><i class="fa fa-envelope"></i> News Feeds</a></li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="3" data-toggle="dropdown"><i class="fa fa-building-o"></i> Enterprise<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="editenterprise.php">Add Enterprise</a></li>
+                            <li><a href="Enterprises.html">View Enterprises</a></li>
+                            <li><a href="editEnterprise.html">Edit Enterprise</a></li>
+                            <li><a href="releaseEnterprise.html">Release Enterprise</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="Consumers.html"><i class="fa fa-tablet"></i> Consumer</a></li>
+                    <li><a href="#"><i class="fa fa-users"></i> Users</a></li>
+                    <li><a href="systemsCheck.html"><i class="fa fa-gears"></i>System Check</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br /><br /> 
+    
+    <div class="alert alert-info" ng-show="loading">Loading Data...</div> 
+
+    <br /><br />
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Compare Relational Database and Gragh Database Data</h3>
+                <br />
+                <select class="form-control" ng-model="choice">
+                    <option value="Enterprise Data">Enterprise Data</option>
+                    <option value="News Feed Data">News Feed Data</option>
+                    <option value="Duplicate Nodes">Duplicate Nodes</option>
+                    <option value="Duplicate Relations">Duplicate Relationships</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="row" style="margin-top: 20px; margin-left: 0px">
+            <div class="col-md-4 well" ng-show="tableShow">
+                <span><b>Total Enterprises in relational database : {{entCounts.relCount}}</b></span><br />
+                <span><b>Total Enterprises in graph database : <a href="#graph" data-toggle="modal">{{entCounts.graphCount}}</a></b></span>
+
+                <div class="col-md-12">
+                    <div class="modal" id="graph" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <center><h2>Enterprises not in relational</h2></center>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-info" ng-show="loadingIn">Loading Data...</div>
+                                    <div class="alert alert-isuccess" ng-show="deleted"><b>Success! </b>Enterprises have been deleted</div>
+                                    <p>
+                                        There are enterprises in graph data base that are not in relational database
+                                    </p>
+                                    <p>
+                                        Press remove button to delete them
+                                    </p>
+                                    <p>
+                                        <button class="btn btn-danger" ng-click="getInData()">Remove</button>
+                                    </p>
+                                    <div class="well" ng-show="showIndata">
+                                        <h4>You are about to delete the following enterprises : </h4>
+                                        <table class="table table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Enterprise Name</th>
+                                                    <th>Company Registration Number</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="data in inData">
+                                                    <th>{{$index+1}}</th>
+                                                    <th>{{data.name}}</th>
+                                                    <th>{{data.reg}}</th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button class="btn btn-success" ng-click="deleteIndata()" ng-show="showButton">Continue</button>
+                                            <button class="btn btn-primary" ng-show="showButton" ng-click="cancel()">Cancel</button>
+                                        </div>
+                                    </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+     
+        </div>
+        </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" ng-show="tableShow">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Enterprise</th>
+                            <th>Relational : E-mail</th>
+                            <th>Graph : E-mail</th>
+                            <th>Status</th>
+                            <th>Relational : Company Registration Number</th>
+                            <th>Graph : Company Registration Number</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="enterprise in enterpriseData">
+                            <td>{{enterprise.data.enterprise}}</td>
+                            <td>{{enterprise.data.emailRel}}</td>
+                            <td>{{enterprise.data.emailGraph}}</td>
+                            <td>
+                                <button class="btn btn-success" ng-show="enterprise.data.emailStatus">Match</button>
+                                <button class="btn btn-danger" ng-hide="enterprise.data.emailStatus">Diffrent</button>
+                            </td>
+                            <td>{{enterprise.data.companyRel}}</td>
+                            <td>{{enterprise.data.companyGraph}}</td>
+                            <td>
+                                <button class="btn btn-success" ng-show="enterprise.data.companyStatus">Match</button>
+                                <button class="btn btn-danger" ng-hide="enterprise.data.companyStatus">Diffrent</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <span>Showing {{count}} of {{enterpriseData[0].resultSize}}</span>
+                <ul class="pager">
+                    <li>
+                        <a ng-click="getPrevEntPage()">Previous</a>
+                        <a ng-click="getNextEntPage()">Next</a>
+
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-12" ng-show="newsShow">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th data-toggle="tooltip" data-placement="top" title="Graph database guid">Guid</th>
+                            <th>Publisher</th>
+                            <th data-toggle="tooltip" data-placement="top" title="Relational database guid has content">Content</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="news in newsData">
+                            <td ng-bind="$index+1"></td>
+                            <td ng-bind="news.data.guid"></td>
+                            <td ng-bind="news.data.publisher"></td>
+                            <td>
+                                <button class="btn btn-success" ng-show="news.data.result" disabled>Has Content</button>
+                                <button class="btn btn-danger" ng-hide="news.data.result" disabled>No Content</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <span>Showing {{countFeed}} of {{newsData[0].resultSize}}</span>
+                <ul class="pager">
+                    <li>
+                        <a ng-click="getPrevFeedPage()">Previous</a>
+                        <a ng-click="getNxtFeedPage()">Next</a>
+
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-12">
+                <table class="table table-hover table-striped" ng-show="duplicateShow">
+                    <thead>
+                        <tr>
+                            <th>Consumer</th>
+                            <th>Enterprise</th>
+                            <th>News Feed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="duplicate in duplicates">
+                            <td><a href="#duplicate{{$index+1}}" data-toggle="modal">{{duplicate.consumer.length}}</a></td>
+                            <td><a href="#duplicateEnt{{$index+1}}" data-toggle="modal">{{duplicate.enterprise.length}}</a></td>
+                            <td><a href="#duplicateFeed{{$index+1}}" data-toggle="modal">{{duplicate.feed.length}}</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-12" ng-repeat="duplicate in duplicates">
+                <div class="modal" id="duplicate{{$index+1}}" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <center><h2>Consumers</h2></center>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <p ng-repeat="consumer in duplicate.consumer">
+                                        Number : {{consumer.number}}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12" ng-repeat="duplicate in duplicates">
+                <div class="modal" id="duplicateEnt{{$index+1}}" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <center><h2>Enterprises</h2></center>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <p ng-repeat="enterprise in duplicate.enterprise">
+                                        Company Registration Number : {{enterprise.companyregnumber}}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12" ng-repeat="duplicate in duplicates">
+                <div class="modal" id="duplicateFeed{{$index+1}}" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <center><h2>News Feeds</h2></center>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <p ng-repeat="feed in duplicate.feed">
+                                        Company Registration Number : {{feed.guid}}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12" ng-show="relationTable">
+                <center><h4>Relationships</h4></center>
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Published</th>
+                            <th>Viewed</th>
+                            <th>Connected</th>
+                            <th>Group Feeds</th>
+                            <th>Member Of</th>
+                            <th>Contains</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="duplicateRelation in duplicateRelations">
+                            <td>{{duplicateRelation.published.length}}</td>
+                            <td>{{duplicateRelation.viewed.length}}</td>
+                            <td>{{duplicateRelation.connected.length}}</td>
+                            <td>{{duplicateRelation.groupFeeds.length}}</td>
+                            <td>{{duplicateRelation.memberOf.length}}</td>
+                            <td>{{duplicateRelation.contains.length}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="alert alert-info" ng-show="loading2">Loading Data...</div> 
+</body>
+</html>

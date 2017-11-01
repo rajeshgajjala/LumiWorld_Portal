@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" ng-app>
+<head>
+    <meta charset="utf-8" />
+    <title>Lumi World Admin | Release Enterprise</title>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/font-style.css" />
+    <script src="js/angular.js"></script>
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/enterpriseRelease.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/main.js"></script>
+</head>
+<body ng-controller="releaseEnterpriseController">
+
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand">Luminet World MIS</a>
+            </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="Dashboard.html"><i class="fa fa-tachometer"></i> Dashboard</a></li>
+                    <li><a href="newsFeeds.html"><i class="fa fa-envelope"></i> News Feeds</a></li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="3" data-toggle="dropdown"><i class="fa fa-building-o"></i> Enterprise<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="editenterprise.php">Add Enterprise</a></li>
+                            <li><a href="Enterprises.html">View Enterprises</a></li>
+                            <li><a href="editEnterprise.html">Edit Enterprise</a></li>
+                            <li><a href="releaseEnterprise.html">Release Enterprise</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="Consumers.html"><i class="fa fa-tablet"></i> Consumer</a></li>
+                    <li><a href="#"><i class="fa fa-users"></i> Users</a></li>
+                    <li><a href="systemsCheck.html"><i class="fa fa-gears"></i>System Check</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <br /><br />
+    <div class="alert alert-info" ng-show="loading">Loading data...</div>
+    <div class="alert alert-info" ng-show="loadingStatus">Changing Status...</div>
+    <div class="alert alert-success" ng-show="showSuccess"> <b>Success!</b> Status has been updated.</div>
+    <div class="alert alert-success" ng-show="showSuccess2"> <b>Success!</b> Node has been created.</div>
+    <div class="alert alert-danger" ng-show="showFail"><b>Sorry!</b> Status can not be updated.</div>
+    <div class="alert alert-danger" ng-show="showFail2"><b>Sorry!</b> Enterprise has already been released.</div>
+    <div class="container">
+
+            <div class="col-md-5 well" style="margin-top: 30px;margin-left: 0px;">
+                <h4 style="margin-top: 0px;">Status Keys : </h4>
+                <span class="label label-danger">1</span>
+                <span><b> : Registered but not verified</b></span><br />
+                <span class="label label-primary">2</span>
+                <span><b> : E-mail sent for verification</b></span><br />
+                <span class="label label-warning">3</span>
+                <span><b> : E-mail verified but not active</b></span><br />
+                <span class="label label-success">4</span>
+                <span><b> : Active</b></span><br />
+            </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="enterprise in enterprises | orderBy:predicate">
+                            <td>{{$index+1}}</td>
+                            <td>{{enterprise.name}}</td>
+                            <td>
+                                <span class="label label-danger" ng-show="enterprise.show1">1</span>
+                                <span class="label label-primary" ng-show="enterprise.show2">2</span>
+                                <span class="label label-warning" ng-show="enterprise.show3">3</span>
+                                <span class="label label-success" ng-show="enterprise.show4">4</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary" ng-click="changeStatus()">Change</button>
+                                <button class="btn btn-danger" ng-click="change1(enterprise.name)" ng-show="showChange">1</button>
+                                <button class="btn btn-primary" ng-click="change2(enterprise.name)" ng-show="showChange">2</button>
+                                <button class="btn btn-warning" ng-click="change3(enterprise.name)" ng-show="showChange">3</button>
+                                <button class="btn btn-success" ng-click="change4(enterprise.name)" ng-show="showChange">4</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+
+    
+
+
+        <br /><br />
+        <div class="row">
+            <div class="col-md-5 well" ng-show="showCurrent">
+                <span><b>Current Status : </b></span>
+                <span class="label label-danger" ng-show="show1">1</span>
+                <span class="label label-primary" ng-show="show2">2</span>
+                <span class="label label-warning" ng-show="show3">3</span>
+                <span class="label label-success" ng-show="show4">4</span>
+                <button class="btn btn-primary" ng-click="changeStatus()">Change</button>
+            </div>
+
+            <div class="col-md-2"></div>
+
+            <div class="col-md-5 well" ng-show="showChange">
+                <h4>Change Status</h4><br />
+                <button class="btn btn-danger" ng-click="change1()">1</button>
+                <button class="btn btn-primary" ng-click="change2()">2</button>
+                <button class="btn btn-warning" ng-click="change3()">3</button>
+                <button class="btn btn-success" ng-click="change4()">4</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

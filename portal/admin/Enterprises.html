@@ -1,0 +1,302 @@
+﻿<!DOCTYPE html>
+
+<html ng-app>
+<head>
+    <meta charset="utf-8" />
+    <title>Lumi World Admin | Enterprises</title>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/font-style.css" />
+    <script src="js/angular.js"></script>
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/enterprise.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="../js/config.js"></script> 
+    <script src="../js/main.js"></script>
+</head>
+<body ng-controller="enterpriseController">
+
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand">Luminet World MIS</a>
+            </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="Dashboard.html"><i class="fa fa-tachometer"></i> Dashboard</a></li>
+                    <li><a href="newsFeeds.html"><i class="fa fa-envelope"></i> News Feeds</a></li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="3" data-toggle="dropdown"><i class="fa fa-building-o"></i> Enterprise<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="editenterprise.php">Add Enterprise</a></li>
+                            <li><a href="Enterprises.html">View Enterprises</a></li>
+                            <li><a href="editEnterprise.html">Edit Enterprise</a></li>
+                            <li><a href="releaseEnterprise.html">Release Enterprise</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="Consumers.html"><i class="fa fa-tablet"></i> Consumer</a></li>
+                    <li><a href="#"><i class="fa fa-users"></i> Users</a></li>
+                    <li><a href="systemsCheck.html"><i class="fa fa-gears"></i>System Check</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br /><br />
+    <div class="alert alert-info" ng-show="loading">Loading Data...</div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Enterprises</h2>
+                <span>Total Number of Enterprises : {{enterpriseCount}}</span><br />
+                <span>Total Number of Consumers : {{followersCount}}</span><br />
+            </div>
+
+            <div class="col-md-4">
+                <h2>Logins</h2>
+                <span>Today : <a data-toggle="modal" href="#login{{$index+1}}">{{logins[0].logNum}}</a></span><br />
+                <span>Current Week : <a data-toggle="modal" href="#loginWeek{{$index+1}}" ng-click="getInitialWeekData()">{{pastWeekCount}}</a></span><br />
+                <span>Current Month : <a data-toggle="modal" href="#currentMonth{{$index+1}}" ng-click="getInitialMonthData()">{{monthCount}}</a></span><br />
+            </div>
+
+            <div class="col-md-4">
+                <h3>Danglers <i>(Nodes without relationships)</i></h3>
+                <span>Total Number of Danglers  : <a data-toggle="modal" href="#danglers">{{danglersNo}}</a></span>
+            </div>
+
+            <div class="col-md-12">
+                <div class="modal" id="danglers" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>Danglers</h2>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Company Registration Number</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="dangler in danglers">
+                                            <td>{{$index+1}}</td>
+                                            <td>{{dangler.danglers.name}}</td>
+                                            <td>{{dangler.danglers.companyregistrationnumber}} </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       
+   
+
+    <div class="col-md-12">
+        <div class="modal" id="login{{$index+1}}" aria-hidden="true" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="container">
+                            <h2>Last Logins</h2>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <td><b>{{logsTableHeaders.hash}}</b></td>
+                                    <td><b>{{logsTableHeaders.time}}</b></td>
+                                    <td><b>{{logsTableHeaders.username}}</b></td>
+                                    <td><b>{{logsTableHeaders.enterprise}}</b></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="login in logins">
+                                    <td ng-bind="$index+1"></td>
+                                    <td>{{login.log.loginTime | date : 'medium'}}</td>
+                                    <td ng-bind="login.log.username"></td>
+                                    <td ng-bind="login.name"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+            
+    </div>
+    </div>
+
+    <br /><br />
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <td><b>{{enterpriseTableHeaders.hash}}</b></td>
+                            <td><b>{{enterpriseTableHeaders.entName}}</b></td>
+                            <td><b>{{enterpriseTableHeaders.secName}}</b></td>
+                            <td><b>Number of Connections</b></td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="enterprise in enterprises">
+                            <td>{{$index + 1}}</td>
+                            <td><a data-toggle="modal" href="#details{{$index+1}}">{{enterprise.name}}</a></td>
+                            <td ng-bind="enterprise.sector"></td>
+                            <td ng-bind="enterprise.connections"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <span>Showing {{count}} of {{enterpriseCount}}</span>
+                <ul class="pager">
+                    <li>
+                        <a ng-click="getPrevEnterprises()">Previous</a>
+                        <a ng-click="getNxtEnterprises()">Next</a>
+                    </li>
+                </ul>
+                <div class="alert alert-info" ng-show="loading2">Loading Data...</div>
+
+                
+                <div class="col-md-12" ng-repeat="enterprise in enterprises">
+                    <div id="details{{$index+1}}" class="modal" tabindex="-1" aria-hidden="true" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="container"><h2>{{enterprise.name}}</h2></div>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container">
+                                        <p>Contact Number : {{enterprise.contact}}</p>
+                                        <p>E-Mail : {{enterprise.email}}</p>
+                                        <p>Username : {{enterprise.username}}</p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="modal" id="loginWeek{{$index+1}}" aria-hidden="true" tabindex="-1" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="container">
+                                        <h2>Last Logins</h2>
+                                    </div>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-info" ng-show="weekLoading">Loading Data..</div>
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <td><b>{{logsTableHeaders.hash}}</b></td>
+                                                <td><b>{{logsTableHeaders.time}}</b></td>
+                                                <td><b>{{logsTableHeaders.username}}</b></td>
+                                                <td><b>{{logsTableHeaders.enterprise}}</b></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="pastWeekLogin in pastWeekLogins">
+                                                <td ng-bind="$index+1"></td>
+                                                <td>{{pastWeekLogin.data.time | date : 'medium'}}</td>
+                                                <td ng-bind="pastWeekLogin.data.username"></td>
+                                                <td ng-bind="pastWeekLogin.data.enterpriseName"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <span>Showing {{countWeek}} of {{pastWeekCount}}</span>
+                                    <ul class="pager">
+                                        <li><a ng-click="getPrevWeekPage()">Previous</a></li>
+                                        <li><a ng-click="getNxtWeekPage()">Next</a></li>
+                                    </ul>
+                                    <div class="alert alert-info" ng-show="loading">Loading Data...</div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="modal" id="currentMonth{{$index+1}}" aria-hidden="true" tabindex="-1" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="container">
+                                        <h2>Last Logins</h2>
+                                    </div>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-info" ng-show="monthLoading">Loading Data..</div>
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <td><b>{{logsTableHeaders.hash}}</b></td>
+                                                <td><b>{{logsTableHeaders.time}}</b></td>
+                                                <td><b>{{logsTableHeaders.username}}</b></td>
+                                                <td><b>{{logsTableHeaders.enterprise}}</b></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="monthLogin in monthLogins">
+                                                <td ng-bind="$index+1"></td>
+                                                <td>{{monthLogin.data.time | date : 'medium'}}</td>
+                                                <td ng-bind="monthLogin.data.username"></td>
+                                                <td ng-bind="monthLogin.data.enterpriseName"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <span>Showing {{countMonth}} of {{monthCount}}</span>
+                                    <ul class="pager">
+                                        <li><a ng-click="getPrevMonthPage()">Previous</a></li>
+                                        <li><a ng-click="getNxtMonthPage()">Next</a></li>
+                                    </ul>
+                                    <div class="alert alert-info" ng-show="loading">Loading Data...</div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+</html>

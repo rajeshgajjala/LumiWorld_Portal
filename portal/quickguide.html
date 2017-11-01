@@ -1,0 +1,196 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <link href='http://fonts.googleapis.com/css?family=Roboto:500,400,300,700' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="favicon.ico" />
+        <link rel="stylesheet" href="css/main.css?v=0.6">
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+        <script src="js/view.js?v=0.1"></script>
+        <script src="js/config.js"></script>
+        <script src="js/main.js?v=0.6"></script>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            body{
+                margin: 0;
+            }
+            .home-menu li{
+                float: left;
+                list-style: none;
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+            .home-menu{
+                padding-right: 10px;
+
+            }
+            .top-right{
+                font-size: 12pt;
+                line-height: 12pt;
+            }
+            header{
+                display: inline-block;
+                width: 100%;
+                position: relative;
+                margin-top: 30pt;
+            }
+            h1{
+                text-align: center;
+                color: #d1d1d2;
+            }
+
+            .big-button{
+                border-radius: 10px;
+                height: 40px;
+                padding-right: 20px;
+                padding-left: 20px;
+                font-size: large;
+            }
+
+            .grey-div{
+                position: relative;
+                display: inline-block;
+                width: 100%;
+                background-color: #e1e1e2;
+            }
+            .grey-div div{
+                margin: 5% 20% 5% 20%;
+                background-color: #e1e1e2;
+                font-size: 20pt;
+                line-height: 24pt;
+            }
+            .grey-div ul{
+                padding-left: 15pt;
+            }
+
+            textarea{
+                width: 100%;
+            }
+
+            input[type=text], input[type=password], input[type=email]{
+                height: 30px;
+                font-size: large;
+                margin: 12pt 1pt 0pt 1pt;
+                width: 100%;
+            }
+            textarea{
+                font-size: large;
+            }
+
+
+            .toolbar{
+                display: inline-block;
+                width: 80%;
+            }
+
+            .toolbar input{
+                margin-left: 2%;
+            }
+            .fields input{
+                width: 100%;
+            }
+
+
+            .grey-div input[type=checkbox]{
+                width: 25px;
+                height: 25px;
+            }
+            
+            .grey-div img{
+                width: 100%;
+            }
+
+        </style>
+        <script>
+            //enableBrowserCheck = false;
+            $(document).ready(function(){
+                showScreen(1);
+                $('.login-button').addClass('big-button');
+            })
+            function showScreen(idx){
+                $('.grey-div').css('display', 'none');
+                switch(idx){
+                    case 1:
+                        $('#div-first-step').css('display', 'inline-block');
+                        break;
+                    case 2:
+                        $('#div-second-step').css('display', 'inline-block');
+                        break;
+                    case 3:
+                        $('#div-third-step').css('display', 'inline-block');
+                        break;
+                    case 4:
+                        $('#div-fourth-step').css('display', 'inline-block');
+                        break;
+                    default:
+                        $('#div-first-step').css('display', 'inline-block');
+                        break;
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div class="top-bar">
+            <div class="top-logo fl">
+                <a href="index.php" class="fl"><img alt="logo" src="img/lumiworld_login.png"></a>
+            </div>
+            <div style="float: right;" class="top-right">
+                <div style="display: inline-block; margin-right: 200px">
+                    <ul class="home-menu">
+                        <li>Home</li>
+                    </ul>
+                </div>
+                <div style="display: inline-block; margin-right: 10px">
+                    <a href="login.php">Login</a>
+                </div>
+            </div>
+        </div>
+
+        <header>
+            <hgroup>
+                <h1 id="heading">Quick Start Guide</h1>
+            </hgroup>
+        </header>
+        <div id="div-first-step" class="grey-div">
+            <div>
+                <img src="img/QuickStart_1.png" alt="1" />
+            </div>
+            <nav class="toolbar">
+                <input type="button" value="Next" class="login-button fr" onclick="showScreen(2)" />
+                <input type="button" value="Home" class="login-button fr" onclick="javascript: window.location.replace('index.php')" />
+            </nav>
+        </div>
+        <div id="div-second-step" class="grey-div">
+            <div>
+                <img src="img/QuickStart_2.png" alt="1" />
+            </div>
+            <nav class="toolbar">
+                <input type="button" value="Next" class="login-button fr" onclick="showScreen(3)" />
+                <input type="button" value="Home" class="login-button fr" onclick="javascript: window.location.replace('index.php')" />
+            </nav>
+        </div>
+        <div id="div-third-step" class="grey-div">
+            <div>
+                <img src="img/QuickStart_3.png" alt="1" />
+            </div>
+            <nav class="toolbar">
+                <input type="button" value="Next" class="login-button fr" onclick="showScreen(4)" />
+                <input type="button" value="Home" class="login-button fr" onclick="javascript: window.location.replace('index.php')" />
+            </nav>
+        </div><div id="div-fourth-step" class="grey-div">
+            <div>
+                <img src="img/QuickStart_4.png" alt="1" />
+            </div>
+            <nav class="toolbar">
+                <input type="button" value="Home" class="login-button fr" onclick="javascript: window.location.replace('index.php')" />
+            </nav>
+        </div>
+
+    </body>
+</html>

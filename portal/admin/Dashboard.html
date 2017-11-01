@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+
+<html ng-app>
+<head>
+    <meta charset="utf-8" />
+    <title>Lumi World Admin | Dashboard</title>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/font-style.css" />
+    <script src="js/angular.js"></script>
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="../js/config.js"></script>
+      <script src="../js/main.js"></script> 
+</head>
+
+<body ng-controller="followersController">
+
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand">Lumi World MIS</a>
+            </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="Dashboard.html"><i class="fa fa-tachometer"></i> Dashboard</a></li>
+                    <li><a href="newsFeeds.html"><i class="fa fa-envelope"></i> News Feeds</a></li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="3" data-toggle="dropdown"><i class="fa fa-building-o"></i> Enterprise<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="editenterprise.php">Add Enterprise</a></li>
+                            <li><a href="Enterprises.html">View Enterprises</a></li>
+                            <li><a href="editEnterprise.html">Edit Enterprise</a></li>
+                            <li><a href="releaseEnterprise.html">Release Enterprise</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="Consumers.html"><i class="fa fa-tablet"></i> Consumer</a></li>
+                    <li><a href="#"><i class="fa fa-users"></i> Users</a></li>
+                    <li><a href="systemsCheck.html"><i class="fa fa-gears"></i>System Check</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br/><br/> <br/><br/>
+
+    <div class="alert alert-info" ng-show="loading">Loading Data...</div>
+
+    <div class="container"> 
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Enterprises With Most Connections</h3>
+        
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <td><b>{{tableHeader.hash}}</b></td>
+                            <td><b>{{tableHeader.name}}</b></td>
+                            <td><b>{{tableHeader.followers}}</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="mostEntName in mostEntNames">
+                            <td>{{$index + 1}}</td>
+                            <td ng-bind="mostEntName.name"></td>
+                            <td><a data-toggle="modal" href="#mostEnts{{$index+1}}">{{mostEntName.follows}}</a></td>  
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="col-md-12" ng-repeat="mostEntName in mostEntNames">
+                    <div class="modal" id="mostEnts{{$index+1}}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                   <center><h2>Enterprise Followers</h2></center> 
+                                </div>
+                                <div class="modal-body">
+                                            <p ng-repeat="consumer in mostEntName.consumer">
+                                               {{consumer.name}} : {{consumer.number}}
+                                            </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>      
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </div>
+
+            <div class="col-md-4">
+                <h3>Enterprises With Least Connections</h3>
+
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <td><b>{{tableHeader.hash}}</b></td>
+                            <td><b>{{tableHeader.name}}</b></td>
+                            <td><b>{{tableHeader.followers}}</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="leastEntName in leastEntNames">
+                            <td>{{$index + 1}}</td>
+                            <td ng-bind="leastEntName.name"></td>
+                            <td><a data-toggle="modal" href="#leastEnts{{$index+1}}">{{leastEntName.follows}}</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="col-md-4" ng-repeat="leastEntName in leastEntNames">
+                    <div class="modal" id="leastEnts{{$index+1}}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <center><h2>Enterprise Followers</h2></center>
+                                </div>
+                                <div class="modal-body">
+                                            <p ng-repeat="consumer in leastEntName.consumer">
+                                                {{consumer.name}} : {{consumer.number}}
+                                            </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+
+            <div class="col-md-4">
+                <h3>Users With Most Connections</h3>
+
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <td><b>{{tableHeader1.hash}}</b></td>
+                            <td><b>{{tableHeader1.name}}</b></td>
+                            <td><b>{{tableHeader1.consumer}}</b></td>
+                            <td><b>{{tableHeader1.follows}}</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="mostUser in mostUsers">
+                            <td>{{$index + 1}}</td>
+                            <td ng-bind="mostUser.consumerName"></td>
+                            <td ng-bind=" mostUser.consumerNumber"></td>
+                            <td><a data-toggle="modal" href="#mostUser{{$index+1}}">{{mostUser.connections}}</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="col-md-12" ng-repeat="mostUser in mostUsers">
+                    <div class="modal" id="mostUser{{$index+1}}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                   <center><h2>Enterprises</h2></center>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container">
+                                        <p ng-repeat="follows in mostUser.follows">
+                                            {{follows.name}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>        
+    </div>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-12">
+                <h3>Most Viewed News Feed</h3>
+
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <td><b>{{tableHeader2.hash}}</b></td>
+                            <td><b>{{tableHeader2.name}}</b></td>
+                            <td><b>{{tableHeader2.views}}</b></td>
+                            <td><b>{{tableHeader2.content}}</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="newsFeed in newsFeeds">
+                            <td>{{$index + 1}}</td>
+                            <td ng-bind="newsFeed.enterpriseName"></td>
+                            <td><a data-toggle="modal" href="#mostFeeds{{$index+1}}">{{newsFeed.views}}</a> </td>
+                            <td ng-bind="newsFeed.content"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="col-md-12" ng-repeat="newsFeed in newsFeeds">
+                    <div class="modal" id="mostFeeds{{$index+1}}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <center><h2>Enterprises</h2></center>
+                                </div>
+                                <div class="modal-body">
+                                            <p ng-repeat="consumer in newsFeed.consumers">
+                                                {{consumer.name}} : {{consumer.number}}
+                                            </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+    
+</body>
+</html>

@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Lumi World Admin | Consumers</title>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/font-style.css" />
+    <script src="js/angular.js"></script>
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/consumers.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="../js/config.js"></script>
+  <!--  <script src="../js/main.js"></script> -->
+</head>
+<body ng-app ng-controller="consumerController">
+
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand">Luminet World MIS</a>
+            </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="Dashboard.html" title="Dashboard Page"><i class="fa fa-tachometer"></i> Dashboard</a></li>
+                    <li><a href="newsFeeds.html" title="News Feed Page"><i class="fa fa-envelope"></i> News Feeds</a></li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="3" data-toggle="dropdown"><i class="fa fa-building-o"></i> Enterprise<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="editenterprise.php">Add Enterprise</a></li>
+                            <li><a href="Enterprises.html" title="View Enterprises">View Enterprises</a></li>
+                            <li><a href="editEnterprise.html" title="Edit an Enterprise">Edit Enterprise</a></li>
+                            <li><a href="releaseEnterprise.html" title="Release an Enterprise">Release Enterprise</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="Consumers.html" title="Consumer Page"><i class="fa fa-tablet"></i> Consumer</a></li>
+                    <li><a href="#" title="User page"><i class="fa fa-users"></i> Users</a></li>
+                    <li><a href="systemsCheck.html" title="System Check"><i class="fa fa-gears"></i>System Check</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br /><br />
+
+    <div class="alert alert-info" ng-show="loading">Loading Data...</div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 well">
+                <h3>Consumers</h3>
+                <span>Total Number of Consumers : {{followersCount}}</span><br />
+                <span>Types of Devices : <a href="#devices" data-toggle="modal">{{devices.length}}</a></span><br/>
+                <span ng-repeat="most in mostUsed">
+                    Most used Device : {{most.model}} has {{most.dCount}} users.
+                </span>
+            </div>
+
+
+        </div>
+
+            <div class="modal" id="devices" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <center><h2>Devices</h2></center>
+                        </div>
+                        <div class="modal-body">
+                            <p ng-repeat="device in devices">
+                                {{device.device}} 
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="row">
+            <div class="col-md-12 well">
+                <h4>Enterprise</h4>
+                <select class="form-control" ng-model="name" ng-options="enterpriseName.name for enterpriseName in enterpriseNames">
+                    <option></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Cell</th>
+                            <th>Model</th>
+                            <th>APP Version</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="consumer in consumers.consumers">
+                            <td>{{$index+1}}</td>
+                            <td>{{consumer.firstName}}</td>
+                            <td>{{consumer.Cell}}</td>
+                            <td>{{consumer.Model}}</td>
+                            <td>{{consumer.appVersion}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <span>Showing {{showNum}} of {{consumers.total}}</span>
+                <ul class="pager">
+                    <li><a ng-click="prevConsumers()()">Previous</a></li>
+                    <li><a ng-click="nextConsumers()">Next</a></li>
+                </ul>
+            </div>
+        </div>
+       
+        </div>
+
+</body>
+</html>

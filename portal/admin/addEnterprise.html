@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+
+<html ng-app>
+<head>
+    <meta charset="utf-8" />
+    <title>Lumi World Admin | Add Enterprise</title>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/font-style.css" />
+    <script src="js/angular.js"></script>
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/followers.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="../js/config.js"></script> 
+    <script src="../js/main.js"></script> 
+
+
+ 
+</head>
+<body ng-controller="addEnterpriseController">
+
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand">Lumi World MIS</a>
+            </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="Dashboard.html"><i class="fa fa-tachometer"></i> Dashboard</a></li>
+                    <li><a href="newsFeeds.html"><i class="fa fa-envelope"></i> News Feeds</a></li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="3" data-toggle="dropdown"><i class="fa fa-building-o"></i> Enterprise<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="Enterprises.html">View Enterprises</a></li>
+                            <li><a href="editenterprise.php">Add enterprise</a></li>
+                            <li><a href="editenterprise.php">Edit Enterprise</a></li>
+                            <li><a href="releaseEnterprise.html">Release Enterprise</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="#"><i class="fa fa-tablet"></i> Consumer</a></li>
+                    <li><a href="#"><i class="fa fa-users"></i> Users</a></li>
+                    <li><a href="systemsCheck.html"><i class="fa fa-gears"></i>System Check</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <br /><br /><br />
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-success" ng-show="showSuccess"><b>Success!</b> Enterprise has been added</div>
+                <div class="alert alert-danger" ng-show="showFail"><b>Sorry!</b> Enterprise could not be added</div>
+                <div class="alert-success" ng-show="imageStatus"><b>Image Loaded!</b> Refresh page to change image</div>
+            </div>
+        </div>
+    </div>
+
+     <div class="container">
+        <div class="col-md-12">
+            <form role="form" name="AddEnterprise">
+
+                <div class="form-group">
+                    <label for="EntName" class="col-md-2 control-label">Enterprise Name</label>
+                    <div class="col-md-10">
+                        <input type="text" id="EntName" name="name" class="form-control" placeholder="Enter Enterprise Name" ng-model="enterpriseAdd.name" required
+                               ng-minlength=2 />
+                        <div class="error" ng-show="AddEnterprise.name.$dirty && AddEnterprise.name.$invalid" style="color:red;">
+                            <small class="error" ng-show="AddEnterprise.name.$error.required">
+                                The enterprise name is required
+                            </small>
+                            <small class="error" ng-show="AddEnterprise.name.$error.minlength">
+                                The enterprise name should be longer than 2 characters
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="file" class="col-md-2 control-label">Enterprise Image</label> 
+                    <div class="col-md-10">
+                        <canvas id="canvas" width="150px" height="150px" ng-model="sendImage" style="border: 1px gray solid; float: left"></canvas> 
+                        <input type="file" id="file-input"/>
+                    </div> 
+                </div>
+                
+                <div class="form-group">
+                    <br />
+                    <label for="EnterpriseSector" class="col-md-2 control-label">Sector</label>
+                    <div class="col-md-10">
+                        <select class="form-control" name="sect" ng-model="enterpriseAdd.sector" required>
+                            <option ng-repeat="sector in sectors">{{sector.displayName}}</option>
+                        </select>
+                        <div class="error" ng-show="AddEnterprise.sect.$dirty && AddEnterprise.sect.$invalid">
+                            <small class="error" ng-show="AddEnterprise.sect.$error.required">
+                                Please select a sector, sector is required
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="EnterpriseContact" class="col-md-2 control-label">Contact Number</label>
+                    <div class="col-md-10">
+                        <input id="EnterpriseContact" class="form-control" type="number" name="contact" ui-mask="'999 999 9999'" placeholder="__ ___ ____" ng-model="enterpriseAdd.number" required
+                               ng-maxlength=11 ng-minlength=10 />
+                        <div class="error" ng-show="AddEnterprise.contact.$dirty && AddEnterprise.contact.$invalid" style="color:red;">
+                            <small class="error" ng-show="AddEnterprise.contact.$error.required">
+                                Enterprise contact number is required.
+                            </small>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="col-md-2 control-label">E-Mail</label>
+                    <div class="col-md-10">
+                         <input type="email" class="form-control" placeholder="me@luminetgroup.com" name="email" required ng-model="enterpriseAdd.email" />
+                         <div class="error" ng-show="AddEnterprise.email.$dirty && AddEnterprise.email.$invalid" style="color:red;">
+                            <small class="error" ng-show="AddEnterprise.email.$error.required">
+                                Enterprise email is required
+                            </small>
+                            <small class="error" ng-show="AddEnterprise.email.$error.email">
+                                You have entered an invalid e-mail address.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="username" class="col-md-2 control-label">Username</label>
+                    <div class="col-md-10">
+                        <input class="form-control" required placeholder="Enter Username" name="username" ng-model="enterpriseAdd.username"/>
+                        <div class="error" ng-show="AddEnterprise.username.$dirty && AddEnterprise.username.$invalid" style="color:red;">
+                            <small class=" error" ng-show="AddEnterprise.username.$error.required">
+                            An enterprise username is required
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password1" class="col-md-2 control-label" >Password</label>
+                    <div class="col-md-10">
+                        <input id="password1" name="password1" type="password" class="form-control" required ng-minlength="4" ng-model="enterpriseAdd.password"/>
+                        <div class="error" ng-show="enterpriseAdd.password1.$dirty && enterpriseAdd.password1.$invalid" style="color:red;">
+                            <small class="error" ng-show="enterpriseAdd.password1.$error.required">
+                                A password is required
+                            </small>
+                            <small class="error" ng-show="enterpriseAdd.password1.$error.minlength">
+                                A password can not be less than 4 characters
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="street" class="col-md-2 control-label">Street</label>
+                    <div class="col-md-10">
+                        <input type="text" name="street" id="street" class="form-control" placeholder="Enter street name" ng-model="enterpriseAdd.address.street" required />
+                    </div>
+                 </div>
+
+                <div class="form-group">
+                    <label for="suburb" class="col-md-2 control-label">Suburb</label>
+                    <div class="col-md-10">
+                        <input type="text" name="suburb" id="suburb" class="form-control" placeholder="Enter suburb name" ng-model="enterpriseAdd.address.suburb"/> 
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="city" class="col-md-2 control-label">City</label>
+                    <div class="col-md-10">
+                        <input type="text" name="city" id="city" class="form-control" placeholder="Enter city name" ng-model="enterpriseAdd.address.city" required/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="postalCode" class="col-md-2 control-label">Postal Code</label>
+                    <div class="col-md-10">
+                        <input type="number" name="postalCode" id="postalCode" class="form-control" placeholder="Enter postal code" ng-model="enterpriseAdd.address.postalCode" required
+                               ng-maxlength="4" ng-minlength="4"/>
+                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="province" class="col-md-2 control-label">Province</label>
+                    <div class="col-md-10">
+                        <input type="text" name="province" id="province" class="form-control" placeholder="Enter province name" ng-model="enterpriseAdd.address.province" required />                
+                     </div>
+                </div> 
+
+                <div class="form-group">
+                    <label for="desc" class="col-md-2 control-label">Short Description</label>
+                    <div class="col-md-10">
+                        <input type="text" name="desc" id="desc" ng-model="enterpriseAdd.description" class="form-control" placeholder="Enter a short description of the company"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg" class="col-md-2 control-label">Company Registration Number</label>
+                    <div class="col-md-10">
+                        <input type="text" name="reg" id="reg" class="form-control" placeholder="Enter Registration Number" ng-model="enterpriseAdd.reg"
+                               ng-minlength="5" required/>
+                        <div class="error" ng-show="AddEnterprise.reg.$dirty && AddEnterprise.reg.$invalid" style="color:red;">
+                            <small class="error" ng-show="AddEnterprise.reg.$error.required">
+                                Company registration number is required
+                            </small>
+                            <small class="error" ng-show="AddEnterprise.reg.$error.minlength">
+                                Company registration number can not be less than 5 characters
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary" ng-click="sendData()">Add Enterprise</button> 
+                    </div>
+                </div>         
+            </form>
+        </div>
+    </div>     
+</body>
+</html>
